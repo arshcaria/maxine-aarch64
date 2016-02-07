@@ -352,7 +352,7 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
      * @param imm immediate loaded into register.
      */
     public void mov(CiRegister dst, int imm) {
-        mov(dst, NumUtil.asZeroExtendedLong(imm));
+        mov(dst, (long)imm);
     }
 
     /**
