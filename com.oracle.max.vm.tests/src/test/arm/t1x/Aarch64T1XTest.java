@@ -174,26 +174,72 @@ public class Aarch64T1XTest extends MaxTestCase {
         junit.textui.TestRunner.run(Aarch64T1XTest.class);
     }
 
-    public void ignore_DecStack() throws Exception {
+//    public void test_DecStack() throws Exception {
+//        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+//        theCompiler.incStack(3);
+//        masm.mov(64, Aarch64.r0, Aarch64.sp); // copy stack value into r0
+//        theCompiler.decStack(1);
+//        masm.mov(64, Aarch64.r1, Aarch64.sp); // copy stack value onto r1
+//        theCompiler.decStack(2);
+//        masm.mov(64, Aarch64.r2, Aarch64.sp);
+//
+//        long[] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+//        for (int i = 0; i < 16; i++) {
+//            assert 2 * (simulatedValues[1] - simulatedValues[0]) == (simulatedValues[2] - simulatedValues[1]) : "Register " + i + " Value " + simulatedValues[i];
+//        }
+//    }
+//
+//    public void test_IncStack() throws Exception {
+//        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+//        masm.mov(64, Aarch64.r0, Aarch64.sp); // copy stack value into r0
+//        theCompiler.incStack(1);
+//        masm.mov(64, Aarch64.r1, Aarch64.sp); // copy stack value onto r1
+//        theCompiler.incStack(2);
+//        masm.mov(64, Aarch64.r2, Aarch64.sp);
+//
+//        long[] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+//        for (int i = 0; i < 16; i++) {
+//            assert 2 * (simulatedValues[0] - simulatedValues[1]) == (simulatedValues[1] - simulatedValues[2]) : "Register " + i + " Value " + simulatedValues[i];
+//        }
+//    }
 
-    }
+    public void test_AdjustReg() throws Exception {
+        initialiseExpectedValues();
+        resetIgnoreValues();
+    	Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+    	masm.codeBuffer.reset();
+    	masm.mov64BitConstant(Aarch64.r0, 0);
+    	masm.mov64BitConstant(Aarch64.r1, Long.MAX_VALUE);
+    	masm.mov64BitConstant(Aarch64.r2, Long.MIN_VALUE);
+    	masm.mov64BitConstant(Aarch64.r3, 0);
+    	masm.mov64BitConstant(Aarch64.r4, Integer.MAX_VALUE);
+    	masm.mov64BitConstant(Aarch64.r5, 0);
 
-    public void test_IncStack() throws Exception {
-        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-        masm.mov(64, Aarch64.r0, Aarch64.sp); // copy stack value into r0
-        theCompiler.incStack(1);
-        masm.mov(64, Aarch64.r1, Aarch64.sp); // copy stack value onto r1
-        theCompiler.incStack(2);
-        masm.mov(64, Aarch64.r2, Aarch64.sp);
+    	masm.incrementl(Aarch64.r0, 1);
+    	masm.incrementl(Aarch64.r1, 1);
+    	masm.incrementl(Aarch64.r2, -1);
+    	masm.incrementl(Aarch64.r3, Integer.MAX_VALUE);
+    	masm.incrementl(Aarch64.r4, Integer.MIN_VALUE);
+    	masm.incrementl(Aarch64.r5, 0);
 
-        long[] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-        for (int i = 0; i < 16; i++) {
-            assert 2 * (simulatedValues[0] - simulatedValues[1]) == (simulatedValues[1] - simulatedValues[2]) : "Register " + i + " Value " + simulatedValues[i];
-        }
-    }
+    	long[] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+    	
+    	expectedValues[0] = 1;
+    	expectedValues[1] = Long.MIN_VALUE;
+    	expectedValues[2] = Long.MAX_VALUE;
+    	expectedValues[3] = Integer.MAX_VALUE;
+    	expectedValues[4] = -1;
+    	expectedValues[5] = 0;
 
-    public void ignore_AdjustReg() throws Exception {
-
+    	for (int i = 0; i < 6; i++) {
+    		System.out.println("Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i]);
+    	}
+    	
+    	for (int i = 0; i < 6; i++) {
+    		assert simulatedValues[i] == expectedValues[i]
+    		: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+    	}
+    	
     }
 
     public void ignore_PokeInt() throws Exception {
