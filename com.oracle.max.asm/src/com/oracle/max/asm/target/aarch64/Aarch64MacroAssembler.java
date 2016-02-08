@@ -354,6 +354,18 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
     public void mov(CiRegister dst, int imm) {
         mov(dst, (long)imm);
     }
+    
+    /**
+     * Applies a delta value to the contents of reg as long as reg != R15.
+     * @param reg
+     * @param delta
+     */
+    public void incrementl (CiRegister reg, int delta) {
+    	assert(reg != Aarch64.r15);
+    	addq(reg, (long)delta);
+    }
+
+
 
     /**
      * @return Number of instructions necessary to load immediate into register.
