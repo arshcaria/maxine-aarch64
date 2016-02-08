@@ -242,7 +242,7 @@ public class MaxineARMTester {
     }
 
     public long[] runRegisteredSimulation() throws Exception {
-        ProcessBuilder gdbProcess = new ProcessBuilder("arm-none-eabi-gdb");
+        ProcessBuilder gdbProcess = new ProcessBuilder("aarch64-none-elf-gdb");
         gdbProcess.redirectInput(gdbInput);
         gdbProcess.redirectOutput(gdbOutput);
         gdbProcess.redirectError(gdbErrors);
