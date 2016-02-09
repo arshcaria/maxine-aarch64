@@ -269,6 +269,18 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
                 throw new Error("should not reach here");
         }
     }
+    
+    /**
+     * Move 32 bit constant into a register as a 32bit register.
+     * Unoptimised uses 2 instructions.
+     * 
+     * @param reg
+     * @param imm32
+     */
+    public void mov32BitConstant (CiRegister reg, int imm32) {
+    	movz(32, reg, imm32 & 0xFFFF, 0);
+    	movk(32, reg, (imm32 >> 16) & 0xFFFF, 16);
+    }
 
     public void movx(CiRegister dst, CiRegister src) {
         mov(64, dst, src);
