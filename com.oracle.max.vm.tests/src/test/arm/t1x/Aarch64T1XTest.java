@@ -379,22 +379,61 @@ public class Aarch64T1XTest extends MaxTestCase {
 //		}
 //    }
 
-    public void work_PokeDouble() throws Exception {
-    	/* not used -- see test_PeekDouble */
+
+    public void test_PeekFloat() throws Exception {
+    	initialiseExpectedValues();
+    	resetIgnoreValues();
+		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+		masm.codeBuffer.reset();
+		
+		expectedValues[0] = Float.floatToRawIntBits(Float.MAX_VALUE);
+		expectedValues[1] = Float.floatToRawIntBits(Float.MIN_VALUE);
+		expectedValues[2] = Float.floatToRawIntBits(0.0f);
+		expectedValues[3] = Float.floatToRawIntBits(-1.0F);
+		expectedValues[4] = Float.floatToRawIntBits(-123.89F);
+
+		theCompiler.incStack(5);
+		for (int i = 0; i < 5; i++) {
+			testValues[i] = true;
+			masm.mov32BitConstant(Aarch64.r16, (int)expectedValues[i]);
+			masm.fmovCpu2Fpu(32, Aarch64.d16, Aarch64.r16);
+			theCompiler.pokeFloat(Aarch64.d16, i);
+		}
+
+		theCompiler.peekFloat(Aarch64.d4, 4);
+		theCompiler.peekFloat(Aarch64.d3, 3);
+		theCompiler.peekFloat(Aarch64.d2, 2);
+		theCompiler.peekFloat(Aarch64.d1, 1);
+		theCompiler.peekFloat(Aarch64.d0, 0);
+		
+		masm.fmovFpu2Cpu(32, Aarch64.r4, Aarch64.d4);
+		masm.fmovFpu2Cpu(32, Aarch64.r3, Aarch64.d3);
+		masm.fmovFpu2Cpu(32, Aarch64.r2, Aarch64.d2);
+		masm.fmovFpu2Cpu(32, Aarch64.r1, Aarch64.d1);
+		masm.fmovFpu2Cpu(32, Aarch64.r0, Aarch64.d0);
+
+		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+		for (int i = 0; i < 5; i++) {
+			System.out.println(i + " sim: " + Float.intBitsToFloat((int)simulatedValues[i]) + ", exp: " + Float.intBitsToFloat((int)expectedValues[i]));
+			assert Float.intBitsToFloat((int)simulatedValues[i]) == Float.intBitsToFloat((int)expectedValues[i])
+				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+		}
     }
 
-    public void work_PeekFloat() throws Exception {
-
-    }
-
-    public void work_PokeFloat() throws Exception {
-
+    public void ignore_PokeFloat() throws Exception {
+    	/* not used - test incorporated in test_PeekFloat */
     }
 
     public void ignore_AssignDouble() throws Exception {
 
     }
 
+
+    public void ignore_PokeDouble() throws Exception {
+    	/* not used - test incorporated in test_PeekDouble */
+    }
+    
     public void test_PeekDouble() throws Exception {
     	initialiseExpectedValues();
     	resetIgnoreValues();
