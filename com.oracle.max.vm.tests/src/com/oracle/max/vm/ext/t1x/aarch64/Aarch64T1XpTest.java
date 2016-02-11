@@ -181,7 +181,109 @@ public class Aarch64T1XpTest extends MaxTestCase {
         }
     }
 	
-	public void test_LoadStoreObject () throws Exception {
+    public void work_AssignDouble () throws Exception {
+    	initialiseExpectedValues();
+    	resetIgnoreValues();
+		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+		masm.codeBuffer.reset();
+		
+		CiRegister [] dregs = {Aarch64.d0, Aarch64.d1, Aarch64.d2, Aarch64.d3, Aarch64.d4};
+		CiRegister [] lregs = {Aarch64.r0, Aarch64.r1, Aarch64.r2, Aarch64.r3, Aarch64.r4};
+		
+		double [] dValues = {Double.MAX_VALUE, Double.MIN_VALUE, 1.0, 0.12345, -1.345E56};
+
+		
+		for (int  i = 0; i < 5; i++) {
+			expectedValues[i] = Double.doubleToRawLongBits(dValues[i]);
+			theCompiler.assignDouble(dregs[i], dValues[i]);
+			masm.fmovFpu2Cpu(64, lregs[i], dregs[i]);
+		}
+		
+		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+		
+		for (int i = 0; i < 5; i++) {
+			Double d = Double.longBitsToDouble(simulatedValues[i]);
+			assert d == dValues[i]
+				: i + "; Simulated: " + d + ", expected: " + dValues[i];
+		}
+    }
+    
+    public void work_AssignInt () throws Exception {
+    	initialiseExpectedValues();
+    	resetIgnoreValues();
+		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+		masm.codeBuffer.reset();
+		
+		CiRegister [] iregs = {Aarch64.r0, Aarch64.r1, Aarch64.r2, Aarch64.r3, Aarch64.r4};
+		
+		int [] values = {Integer.MAX_VALUE, Integer.MIN_VALUE, 1, 123456789, -123456789, 0};
+
+		
+		for (int  i = 0; i < 5; i++) {
+			expectedValues[i] = values[i];
+			theCompiler.assignInt(iregs[i], values[i]);
+		}
+		
+		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+		
+		for (int i = 0; i < 5; i++) {
+			assert (int)simulatedValues[i] == values[i]
+				: i + "; Simulated: " + (int)simulatedValues[i] + ", expected: " + values[i];
+		}   	
+    }
+    
+    public void test_AssignLong () throws Exception {
+    	initialiseExpectedValues();
+    	resetIgnoreValues();
+		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+		masm.codeBuffer.reset();
+		
+		CiRegister [] lregs = {Aarch64.r0, Aarch64.r1, Aarch64.r2, Aarch64.r3, Aarch64.r4};
+		
+		long [] values = {Long.MAX_VALUE, Long.MIN_VALUE, 1, 12345678987654321L, -12345678987654321L, 0};
+
+		
+		for (int  i = 0; i < 5; i++) {
+			expectedValues[i] = values[i];
+			theCompiler.assignLong(lregs[i], values[i]);
+		}
+		
+		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+		
+		for (int i = 0; i < 5; i++) {
+			assert simulatedValues[i] == values[i]
+				: i + "; Simulated: " + simulatedValues[i] + ", expected: " + values[i];
+		}    	
+    }
+    
+    public void work_AssignFloat () throws Exception {
+    	initialiseExpectedValues();
+    	resetIgnoreValues();
+		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+		masm.codeBuffer.reset();
+		
+		CiRegister [] dregs = {Aarch64.d0, Aarch64.d1, Aarch64.d2, Aarch64.d3, Aarch64.d4};
+		CiRegister [] iregs = {Aarch64.r0, Aarch64.r1, Aarch64.r2, Aarch64.r3, Aarch64.r4};
+		
+		float [] fValues = {Float.MAX_VALUE, Float.MIN_VALUE, 1.0f, 0.12345f, -1.345E36f};
+
+		
+		for (int  i = 0; i < 5; i++) {
+			expectedValues[i] = (int)Float.floatToRawIntBits(fValues[i]);
+			theCompiler.assignFloat(dregs[i], fValues[i]);
+			masm.fmovFpu2Cpu(32, iregs[i], dregs[i]);
+		}
+		
+		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+		
+		for (int i = 0; i < 5; i++) {
+			Float f = Float.intBitsToFloat((int)simulatedValues[i]);
+			assert f == fValues[i]
+				: i + "; Simulated: " + f + ", expected: " + fValues[i];
+		}
+    }
+    
+	public void work_LoadStoreObject () throws Exception {
 		initialiseFrameForCompilation();
 		theCompiler.initFrame(anMethod, codeAttr);
     	initialiseExpectedValues();
@@ -208,7 +310,6 @@ public class Aarch64T1XpTest extends MaxTestCase {
 				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
 		}
 	}
-	
 	public void work_LoadStoreWord () throws Exception {
 		initialiseFrameForCompilation();
 		theCompiler.initFrame(anMethod, codeAttr);
