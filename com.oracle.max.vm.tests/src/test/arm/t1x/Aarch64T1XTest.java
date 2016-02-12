@@ -223,7 +223,7 @@ public class Aarch64T1XTest extends MaxTestCase {
 //    	masm.incrementl(Aarch64.r5, 0);
 //
 //    	long[] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-//    	
+//
 //    	expectedValues[0] = 1;
 //    	expectedValues[1] = Long.MIN_VALUE;
 //    	expectedValues[2] = Long.MAX_VALUE;
@@ -234,43 +234,43 @@ public class Aarch64T1XTest extends MaxTestCase {
 //    	for (int i = 0; i < 6; i++) {
 //    		System.out.println("Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i]);
 //    	}
-//    	
+//
 //    	for (int i = 0; i < 6; i++) {
 //    		assert simulatedValues[i] == expectedValues[i]
 //    		: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
 //    	}
-//    	
+//
 //    }
 
     public void test_PokeInt() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = Integer.MAX_VALUE;
-		expectedValues[1] = Integer.MIN_VALUE;
-		expectedValues[2] = -123456789;
-		expectedValues[3] = 0;
-		expectedValues[4] = 123456789;
-		theCompiler.incStack(4);
-		for (int i = 0; i < 5; i++) {
-			masm.mov32BitConstant(Aarch64.r16, (int)expectedValues[i]);
-			theCompiler.pokeInt(Aarch64.r16, i);
-		}
-		
-		theCompiler.peekInt(Aarch64.r0, 0);
-		theCompiler.peekInt(Aarch64.r1, 1);
-		theCompiler.peekInt(Aarch64.r2, 2);
-		theCompiler.peekInt(Aarch64.r3, 3);
-		theCompiler.peekInt(Aarch64.r4, 4);
-		
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-		
-		for (int i = 0; i < 5; i++) {
-			assert (int)expectedValues[i] == (int)simulatedValues[i]
-					: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}		
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        expectedValues[0] = Integer.MAX_VALUE;
+        expectedValues[1] = Integer.MIN_VALUE;
+        expectedValues[2] = -123456789;
+        expectedValues[3] = 0;
+        expectedValues[4] = 123456789;
+        theCompiler.incStack(4);
+        for (int i = 0; i < 5; i++) {
+            masm.mov32BitConstant(Aarch64.r16, (int)expectedValues[i]);
+            theCompiler.pokeInt(Aarch64.r16, i);
+        }
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+        theCompiler.peekInt(Aarch64.r2, 2);
+        theCompiler.peekInt(Aarch64.r3, 3);
+        theCompiler.peekInt(Aarch64.r4, 4);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 5; i++) {
+            assert (int)expectedValues[i] == (int)simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
     public void ignore_AssignLong() throws Exception {
@@ -278,38 +278,38 @@ public class Aarch64T1XTest extends MaxTestCase {
     }
 
     public void work_PeekLong() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = Long.MAX_VALUE;
-		expectedValues[2] = Long.MIN_VALUE;
-		expectedValues[4] = -12345678987654321L;
-		expectedValues[6] = 12345678987654321L;
-		expectedValues[8] = 1;
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
 
-		for (int i = 0; i < 10; i+=2) {
-			testValues[i] = true;
-			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
-			masm.push(64, Aarch64.r16);
-			masm.push(64, Aarch64.zr);
-		}
+        expectedValues[0] = Long.MAX_VALUE;
+        expectedValues[2] = Long.MIN_VALUE;
+        expectedValues[4] = -12345678987654321L;
+        expectedValues[6] = 12345678987654321L;
+        expectedValues[8] = 1;
+
+        for (int i = 0; i < 10; i+=2) {
+            testValues[i] = true;
+            masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
+            masm.push(64, Aarch64.r16);
+            masm.push(64, Aarch64.zr);
+        }
 
 
-		theCompiler.peekLong(Aarch64.r8, 0);
-		theCompiler.peekLong(Aarch64.r6, 2);
-		theCompiler.peekLong(Aarch64.r4, 4);
-		theCompiler.peekLong(Aarch64.r2, 6);
-		theCompiler.peekLong(Aarch64.r0, 8);
+        theCompiler.peekLong(Aarch64.r8, 0);
+        theCompiler.peekLong(Aarch64.r6, 2);
+        theCompiler.peekLong(Aarch64.r4, 4);
+        theCompiler.peekLong(Aarch64.r2, 6);
+        theCompiler.peekLong(Aarch64.r0, 8);
 
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
 
-		for (int i = 0; i < 10; i+=2) {
-			System.out.println(i + " sim: " + simulatedValues[i] + ", exp: " + expectedValues[i]);
-			assert expectedValues[i] == simulatedValues[i]
-				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}
+        for (int i = 0; i < 10; i+=2) {
+            System.out.println(i + " sim: " + simulatedValues[i] + ", exp: " + expectedValues[i]);
+            assert expectedValues[i] == simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
 //    public void test_PokeLong() throws Exception {
@@ -317,7 +317,7 @@ public class Aarch64T1XTest extends MaxTestCase {
 //    	resetIgnoreValues();
 //		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
 //		masm.codeBuffer.reset();
-//		
+//
 //		expectedValues[0] = Long.MAX_VALUE;
 //		expectedValues[1] = Long.MIN_VALUE;
 //		expectedValues[2] = -12345678987654321L;
@@ -328,15 +328,15 @@ public class Aarch64T1XTest extends MaxTestCase {
 //			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
 //			theCompiler.pokeLong(Aarch64.r16, i);
 //		}
-//		
+//
 //		theCompiler.peekLong(Aarch64.r0, 0);
 //		theCompiler.peekLong(Aarch64.r1, 1);
 //		theCompiler.peekLong(Aarch64.r2, 2);
 //		theCompiler.peekLong(Aarch64.r3, 3);
 //		theCompiler.peekLong(Aarch64.r4, 4);
-//		
+//
 //		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-//		
+//
 //		for (int i = 0; i < 5; i++) {
 //			assert expectedValues[i] == simulatedValues[i]
 //					: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
@@ -348,28 +348,28 @@ public class Aarch64T1XTest extends MaxTestCase {
 //    	resetIgnoreValues();
 //		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
 //		masm.codeBuffer.reset();
-//		
+//
 //		expectedValues[0] = Integer.MAX_VALUE;
 //		expectedValues[1] = Integer.MIN_VALUE;
 //		expectedValues[2] = -123456789;
 //		expectedValues[3] = 123456789;
 //		expectedValues[4] = 1;
-//		
+//
 //		for (int i = 0; i < 5; i++) {
 //			testValues[i] = true;
 //			masm.mov32BitConstant(Aarch64.r16, (int)expectedValues[i]);
 //			masm.push(32, Aarch64.r16);
 //		}
-//	
+//
 //		theCompiler.peekInt(Aarch64.r4, 0);
 //		theCompiler.peekInt(Aarch64.r3, 1);
 //		theCompiler.peekInt(Aarch64.r2, 2);
 //		theCompiler.peekInt(Aarch64.r1, 3);
 //		theCompiler.peekInt(Aarch64.r0, 4);
 //
-//	
+//
 //		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-//	
+//
 //		for (int i = 0; i < 5; i++) {
 //			System.out.println("i " + (int)simulatedValues[i]);
 //		}
@@ -381,44 +381,44 @@ public class Aarch64T1XTest extends MaxTestCase {
 
 
     public void test_PeekFloat() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = Float.floatToRawIntBits(Float.MAX_VALUE);
-		expectedValues[1] = Float.floatToRawIntBits(Float.MIN_VALUE);
-		expectedValues[2] = Float.floatToRawIntBits(0.0f);
-		expectedValues[3] = Float.floatToRawIntBits(-1.0F);
-		expectedValues[4] = Float.floatToRawIntBits(-123.89F);
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
 
-		theCompiler.incStack(5);
-		for (int i = 0; i < 5; i++) {
-			testValues[i] = true;
-			masm.mov32BitConstant(Aarch64.r16, (int)expectedValues[i]);
-			masm.fmovCpu2Fpu(32, Aarch64.d16, Aarch64.r16);
-			theCompiler.pokeFloat(Aarch64.d16, i);
-		}
+        expectedValues[0] = Float.floatToRawIntBits(Float.MAX_VALUE);
+        expectedValues[1] = Float.floatToRawIntBits(Float.MIN_VALUE);
+        expectedValues[2] = Float.floatToRawIntBits(0.0f);
+        expectedValues[3] = Float.floatToRawIntBits(-1.0F);
+        expectedValues[4] = Float.floatToRawIntBits(-123.89F);
 
-		theCompiler.peekFloat(Aarch64.d4, 4);
-		theCompiler.peekFloat(Aarch64.d3, 3);
-		theCompiler.peekFloat(Aarch64.d2, 2);
-		theCompiler.peekFloat(Aarch64.d1, 1);
-		theCompiler.peekFloat(Aarch64.d0, 0);
-		
-		masm.fmovFpu2Cpu(32, Aarch64.r4, Aarch64.d4);
-		masm.fmovFpu2Cpu(32, Aarch64.r3, Aarch64.d3);
-		masm.fmovFpu2Cpu(32, Aarch64.r2, Aarch64.d2);
-		masm.fmovFpu2Cpu(32, Aarch64.r1, Aarch64.d1);
-		masm.fmovFpu2Cpu(32, Aarch64.r0, Aarch64.d0);
+        theCompiler.incStack(5);
+        for (int i = 0; i < 5; i++) {
+            testValues[i] = true;
+            masm.mov32BitConstant(Aarch64.r16, (int)expectedValues[i]);
+            masm.fmovCpu2Fpu(32, Aarch64.d16, Aarch64.r16);
+            theCompiler.pokeFloat(Aarch64.d16, i);
+        }
 
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+        theCompiler.peekFloat(Aarch64.d4, 4);
+        theCompiler.peekFloat(Aarch64.d3, 3);
+        theCompiler.peekFloat(Aarch64.d2, 2);
+        theCompiler.peekFloat(Aarch64.d1, 1);
+        theCompiler.peekFloat(Aarch64.d0, 0);
 
-		for (int i = 0; i < 5; i++) {
-			System.out.println(i + " sim: " + Float.intBitsToFloat((int)simulatedValues[i]) + ", exp: " + Float.intBitsToFloat((int)expectedValues[i]));
-			assert Float.intBitsToFloat((int)simulatedValues[i]) == Float.intBitsToFloat((int)expectedValues[i])
-				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}
+        masm.fmovFpu2Cpu(32, Aarch64.r4, Aarch64.d4);
+        masm.fmovFpu2Cpu(32, Aarch64.r3, Aarch64.d3);
+        masm.fmovFpu2Cpu(32, Aarch64.r2, Aarch64.d2);
+        masm.fmovFpu2Cpu(32, Aarch64.r1, Aarch64.d1);
+        masm.fmovFpu2Cpu(32, Aarch64.r0, Aarch64.d0);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println(i + " sim: " + Float.intBitsToFloat((int)simulatedValues[i]) + ", exp: " + Float.intBitsToFloat((int)expectedValues[i]));
+            assert Float.intBitsToFloat((int)simulatedValues[i]) == Float.intBitsToFloat((int)expectedValues[i])
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
 
@@ -434,46 +434,46 @@ public class Aarch64T1XTest extends MaxTestCase {
     public void ignore_PokeDouble() throws Exception {
     	/* not used - test incorporated in test_PeekDouble */
     }
-    
+
     public void test_PeekDouble() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = Double.doubleToRawLongBits(Double.MAX_VALUE);
-		expectedValues[2] = Double.doubleToRawLongBits(Double.MIN_VALUE);
-		expectedValues[4] = Double.doubleToRawLongBits(0.0);
-		expectedValues[6] = Double.doubleToRawLongBits(-1.0);
-		expectedValues[8] = Double.doubleToRawLongBits(-123.89);
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
 
-		theCompiler.incStack(10);
-		for (int i = 0; i < 10; i+=2) {
-			testValues[i] = true;
-			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
-			masm.fmovCpu2Fpu(64, Aarch64.d16, Aarch64.r16);
-			theCompiler.pokeDouble(Aarch64.d16, i);
-		}
+        expectedValues[0] = Double.doubleToRawLongBits(Double.MAX_VALUE);
+        expectedValues[2] = Double.doubleToRawLongBits(Double.MIN_VALUE);
+        expectedValues[4] = Double.doubleToRawLongBits(0.0);
+        expectedValues[6] = Double.doubleToRawLongBits(-1.0);
+        expectedValues[8] = Double.doubleToRawLongBits(-123.89);
 
-		theCompiler.peekDouble(Aarch64.d8, 8);
-		theCompiler.peekDouble(Aarch64.d6, 6);
-		theCompiler.peekDouble(Aarch64.d4, 4);
-		theCompiler.peekDouble(Aarch64.d2, 2);
-		theCompiler.peekDouble(Aarch64.d0, 0);
-		
-		masm.fmovFpu2Cpu(64, Aarch64.r8, Aarch64.d8);
-		masm.fmovFpu2Cpu(64, Aarch64.r6, Aarch64.d6);
-		masm.fmovFpu2Cpu(64, Aarch64.r4, Aarch64.d4);
-		masm.fmovFpu2Cpu(64, Aarch64.r2, Aarch64.d2);
-		masm.fmovFpu2Cpu(64, Aarch64.r0, Aarch64.d0);
+        theCompiler.incStack(10);
+        for (int i = 0; i < 10; i+=2) {
+            testValues[i] = true;
+            masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
+            masm.fmovCpu2Fpu(64, Aarch64.d16, Aarch64.r16);
+            theCompiler.pokeDouble(Aarch64.d16, i);
+        }
 
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+        theCompiler.peekDouble(Aarch64.d8, 8);
+        theCompiler.peekDouble(Aarch64.d6, 6);
+        theCompiler.peekDouble(Aarch64.d4, 4);
+        theCompiler.peekDouble(Aarch64.d2, 2);
+        theCompiler.peekDouble(Aarch64.d0, 0);
 
-		for (int i = 0; i < 10; i+=2) {
-			System.out.println(i + " sim: " + simulatedValues[i] + ", exp: " + expectedValues[i] + " dbl: " + Double.longBitsToDouble(expectedValues[i]));
-			assert expectedValues[i] == simulatedValues[i]
-				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}
+        masm.fmovFpu2Cpu(64, Aarch64.r8, Aarch64.d8);
+        masm.fmovFpu2Cpu(64, Aarch64.r6, Aarch64.d6);
+        masm.fmovFpu2Cpu(64, Aarch64.r4, Aarch64.d4);
+        masm.fmovFpu2Cpu(64, Aarch64.r2, Aarch64.d2);
+        masm.fmovFpu2Cpu(64, Aarch64.r0, Aarch64.d0);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 10; i+=2) {
+            System.out.println(i + " sim: " + simulatedValues[i] + ", exp: " + expectedValues[i] + " dbl: " + Double.longBitsToDouble(expectedValues[i]));
+            assert expectedValues[i] == simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
     public void ignore_DoLconst() throws Exception {
@@ -499,8 +499,8 @@ public class Aarch64T1XTest extends MaxTestCase {
     public void ignore_Mul() throws Exception {
 
     }
-    
-    
+
+
 //    public void test_push_pop () throws Exception {
 //    	initialiseExpectedValues();
 //      	resetIgnoreValues();
@@ -518,136 +518,136 @@ public class Aarch64T1XTest extends MaxTestCase {
 //    	masm.pop (64, Aarch64.r2);
 //    	masm.pop (64, Aarch64.r1);
 //    	masm.pop (64, Aarch64.r0);
-//    	
+//
 //    	long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-//    	
+//
 //    	for (int i = 0; i < 6; i++) {
 //    		assert expectedValues[i] == simulatedValues[i]
 //    				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
 //    	}
-//    	
+//
 //    }
 //
     public void work_PeekWord() throws Exception {
-    	initialiseExpectedValues();
-      	resetIgnoreValues();
-  		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-  		masm.codeBuffer.reset();
-  		
-		expectedValues[0] = Long.MAX_VALUE;
-		expectedValues[1] = Long.MIN_VALUE;
-		expectedValues[2] = -123456789;
-		expectedValues[3] = 0;
-		expectedValues[4] = 123456789;
-		
-  		for (int i = 0; i < 5; i++) {
-  			testValues[i] = true;
-  			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
-  			masm.push(64, Aarch64.r16);
-  		}
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
 
-  		theCompiler.peekWord(Aarch64.r4, 0);
-  		theCompiler.peekWord(Aarch64.r3, 1);
-  		theCompiler.peekWord(Aarch64.r2, 2);
-  		theCompiler.peekWord(Aarch64.r1, 3);
-  		theCompiler.peekWord(Aarch64.r0, 4);
+        expectedValues[0] = Long.MAX_VALUE;
+        expectedValues[1] = Long.MIN_VALUE;
+        expectedValues[2] = -123456789;
+        expectedValues[3] = 0;
+        expectedValues[4] = 123456789;
 
-  		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+        for (int i = 0; i < 5; i++) {
+            testValues[i] = true;
+            masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
+            masm.push(64, Aarch64.r16);
+        }
 
-  		for (int i = 0; i < 5; i++) {
-    		assert expectedValues[i] == simulatedValues[i]
-    				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-  		}
+        theCompiler.peekWord(Aarch64.r4, 0);
+        theCompiler.peekWord(Aarch64.r3, 1);
+        theCompiler.peekWord(Aarch64.r2, 2);
+        theCompiler.peekWord(Aarch64.r1, 3);
+        theCompiler.peekWord(Aarch64.r0, 4);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 5; i++) {
+            assert expectedValues[i] == simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
-    
+
     public void work_PokeWord() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = Long.MAX_VALUE;
-		expectedValues[1] = Long.MIN_VALUE;
-		expectedValues[2] = -123456789;
-		expectedValues[3] = 0;
-		expectedValues[4] = 123456789;
-		theCompiler.incStack(4);
-		for (int i = 0; i < 5; i++) {
-			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
-			theCompiler.pokeWord(Aarch64.r16, i);
-		}
-		
-		theCompiler.peekWord(Aarch64.r0, 0);
-		theCompiler.peekWord(Aarch64.r1, 1);
-		theCompiler.peekWord(Aarch64.r2, 2);
-		theCompiler.peekWord(Aarch64.r3, 3);
-		theCompiler.peekWord(Aarch64.r4, 4);
-		
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-		
-		for (int i = 0; i < 5; i++) {
-			assert expectedValues[i] == simulatedValues[i]
-					: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        expectedValues[0] = Long.MAX_VALUE;
+        expectedValues[1] = Long.MIN_VALUE;
+        expectedValues[2] = -123456789;
+        expectedValues[3] = 0;
+        expectedValues[4] = 123456789;
+        theCompiler.incStack(4);
+        for (int i = 0; i < 5; i++) {
+            masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
+            theCompiler.pokeWord(Aarch64.r16, i);
+        }
+
+        theCompiler.peekWord(Aarch64.r0, 0);
+        theCompiler.peekWord(Aarch64.r1, 1);
+        theCompiler.peekWord(Aarch64.r2, 2);
+        theCompiler.peekWord(Aarch64.r3, 3);
+        theCompiler.peekWord(Aarch64.r4, 4);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 5; i++) {
+            assert expectedValues[i] == simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
     public void work_PeekObject() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = 123456789;
-		expectedValues[1] = 975318642;
-		expectedValues[2] = 135792468;
-		expectedValues[3] = Long.MAX_VALUE;
-		
-		for (int i = 0; i < 4; i++) {
-			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
-			masm.push(64, Aarch64.r16);
-		}
-		
-		theCompiler.peekObject(Aarch64.r3, 0);
-		theCompiler.peekObject(Aarch64.r2, 1);
-		theCompiler.peekObject(Aarch64.r1, 2);
-		theCompiler.peekObject(Aarch64.r0, 3);
-		
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-		
-		for (int i = 0; i < 4; i++) {
-			assert expectedValues[i] == simulatedValues[i]
-				: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        expectedValues[0] = 123456789;
+        expectedValues[1] = 975318642;
+        expectedValues[2] = 135792468;
+        expectedValues[3] = Long.MAX_VALUE;
+
+        for (int i = 0; i < 4; i++) {
+            masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
+            masm.push(64, Aarch64.r16);
+        }
+
+        theCompiler.peekObject(Aarch64.r3, 0);
+        theCompiler.peekObject(Aarch64.r2, 1);
+        theCompiler.peekObject(Aarch64.r1, 2);
+        theCompiler.peekObject(Aarch64.r0, 3);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 4; i++) {
+            assert expectedValues[i] == simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
     public void work_PokeObject() throws Exception {
-    	initialiseExpectedValues();
-    	resetIgnoreValues();
-		Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
-		masm.codeBuffer.reset();
-		
-		expectedValues[0] = 123456789;
-		expectedValues[1] = 975318642;
-		expectedValues[2] = 135792468;
-		expectedValues[3] = Long.MAX_VALUE;
-		theCompiler.incStack(4);
-		for (int i = 0; i < 4; i++) {
-			masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
-			theCompiler.pokeObject(Aarch64.r16, i);
-		}
-		
-		theCompiler.peekObject(Aarch64.r0, 0);
-		theCompiler.peekObject(Aarch64.r1, 1);
-		theCompiler.peekObject(Aarch64.r2, 2);
-		theCompiler.peekObject(Aarch64.r3, 3);
-		
-		long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
-		
-		for (int i = 0; i < 4; i++) {
-			assert expectedValues[i] == simulatedValues[i]
-					: "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
-		}
+        initialiseExpectedValues();
+        resetIgnoreValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        expectedValues[0] = 123456789;
+        expectedValues[1] = 975318642;
+        expectedValues[2] = 135792468;
+        expectedValues[3] = Long.MAX_VALUE;
+        theCompiler.incStack(4);
+        for (int i = 0; i < 4; i++) {
+            masm.mov64BitConstant(Aarch64.r16, expectedValues[i]);
+            theCompiler.pokeObject(Aarch64.r16, i);
+        }
+
+        theCompiler.peekObject(Aarch64.r0, 0);
+        theCompiler.peekObject(Aarch64.r1, 1);
+        theCompiler.peekObject(Aarch64.r2, 2);
+        theCompiler.peekObject(Aarch64.r3, 3);
+
+        long [] simulatedValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 4; i++) {
+            assert expectedValues[i] == simulatedValues[i]
+                            : "Register " + i + " " + simulatedValues[i] + " expected " + expectedValues[i];
+        }
     }
 
     public void failingtestIfEq() throws Exception {
