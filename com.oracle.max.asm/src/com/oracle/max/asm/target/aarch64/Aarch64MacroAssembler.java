@@ -269,11 +269,11 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
                 throw new Error("should not reach here");
         }
     }
-    
+
     /**
      * Move 32 bit constant into a register as a 32bit register.
      * Unoptimised uses 2 instructions.
-     * 
+     *
      * @param reg
      * @param imm32
      */
@@ -297,7 +297,7 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
         }
     }
 
-    
+
     /**
      * Push a register onto the stack using 16byte alignment.
      * @param reg
@@ -305,7 +305,7 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
     public void push (int size, CiRegister reg) {
     	str(size, reg, Aarch64Address.createPreIndexedImmediateAddress(Aarch64.sp, -16));
     }
-    
+
     /**
      * Pop the value from the top of the stack into register. Uses 16byte alignment.
      * @param size
@@ -383,15 +383,16 @@ public class Aarch64MacroAssembler extends Aarch64Assembler {
     public void mov(CiRegister dst, int imm) {
         mov(dst, (long)imm);
     }
-    
+
     /**
-     * Applies a delta value to the contents of reg as long as reg != R15.
+     * Applies a delta value to the contents of reg as a 32bit quantity.
      * @param reg
      * @param delta
      */
-    public void incrementl (CiRegister reg, int delta) {
-    	assert(reg != Aarch64.r15);
-    	addq(reg, (long)delta);
+    public void increment32 (CiRegister reg, int delta) {
+    	assert(reg != Aarch64.r16);
+    	mov32BitConstant(Aarch64.r16, delta);
+    	add(32, reg, reg, Aarch64.r16, ShiftType.LSL, 0);
     }
 
 
