@@ -309,6 +309,25 @@ public class Aarch64T1XpTest extends MaxTestCase {
     	}
     }
 
+    public void test_do_dup () throws Exception {
+        int testVal = (int)Math.random();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.mov32BitConstant(Aarch64.r16, testVal);
+        theCompiler.incStack(1);
+
+        expectedValues[0] = testVal;
+        expectedValues[1] = testVal;
+        theCompiler.pokeInt(Aarch64.r16, testVal);
+        theCompiler.do_dup();
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+
+        long [] simValues = generateAndTest (expectedValues, testValues, bitmasks);
+
+        assert simValues[0] == simValues[1];
+
+
+    }
     public void test_do_dconst() throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
