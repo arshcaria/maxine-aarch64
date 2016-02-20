@@ -309,6 +309,85 @@ public class Aarch64T1XpTest extends MaxTestCase {
     	}
     }
 
+    public void test_do_dconst() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+        double values [] = {Double.MAX_VALUE, Double.MIN_VALUE, 0.0d, 1.1d, 1.234e100, -1.234e100};
+        CiRegister [] regs = {Aarch64.r5, Aarch64.r4, Aarch64.r3, Aarch64.r2, Aarch64.r1, Aarch64.r0};
+
+        for (int i = 0; i < values.length; i++) {
+            expectedValues[i] = Double.doubleToRawLongBits(values[i]);
+            theCompiler.do_dconst(values[i]);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            theCompiler.peekLong(regs[i], 0);
+            theCompiler.decStack(2);
+        }
+
+        long [] simValues = generateAndTest (expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < values.length; i++) {
+            assert values[i] == Double.longBitsToDouble(simValues[i])
+                : i + "; Simulated: " + Double.longBitsToDouble(simValues[i]) + ", expected: " + values[i];
+        }
+    }
+
+    public void work_do_lconst() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+        Long values [] = {Long.MAX_VALUE, Long.MIN_VALUE, 0L, -1000L, 12345678987654321L, -12345678987654321L};
+        CiRegister [] regs = {Aarch64.r5, Aarch64.r4, Aarch64.r3, Aarch64.r2, Aarch64.r1, Aarch64.r0};
+
+        for (int i = 0; i < values.length; i++) {
+            expectedValues[i] = values[i];
+            theCompiler.do_lconst(values[i]);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            theCompiler.peekLong(regs[i], 0);
+            theCompiler.decStack(2);
+        }
+
+        long [] simValues = generateAndTest (expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < values.length; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert expectedValues[i] == simValues[i]
+                : i + "; Simulated: " + simValues[i] + ", expected: " + expectedValues[i];
+        }
+    }
+    public void work_do_fconst () throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+        float values [] = {Float.MAX_VALUE, Float.MIN_VALUE, 0.0f, 1.1f, 123.456789f, -123.456789f};
+        CiRegister [] regs = {Aarch64.r5, Aarch64.r4, Aarch64.r3, Aarch64.r2, Aarch64.r1, Aarch64.r0};
+
+        for (int i = 0; i < values.length; i++) {
+            expectedValues[i] = Float.floatToRawIntBits(values[i]);
+            theCompiler.do_fconst(values[i]);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            theCompiler.peekInt(regs[i], i);
+        }
+
+        long [] simValues = generateAndTest (expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < values.length; i++) {
+            assert values[i] == Float.intBitsToFloat((int)simValues[i])
+                : i + "; Simulated: " + Float.intBitsToFloat((int)simValues[i]) + ", expected: " + values[i];
+        }
+    }
     public void work_do_iconst () throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
@@ -332,7 +411,7 @@ public class Aarch64T1XpTest extends MaxTestCase {
         }
     }
 
-    public void test_do_iinc () throws Exception {
+    public void work_do_iinc () throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
         initialiseExpectedValues();
