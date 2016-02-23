@@ -181,7 +181,7 @@ public class Aarch64T1XpTest extends MaxTestCase {
         }
     }
 
-    public void test_AssignWordReg() throws Exception {
+    public void work_AssignWordReg() throws Exception {
         initialiseExpectedValues();
         resetIgnoreValues();
         Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
@@ -309,8 +309,354 @@ public class Aarch64T1XpTest extends MaxTestCase {
     	}
     }
 
+    public void test_do_swap () throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v1 = -1;
+        int v2 = 0x2;
+
+        theCompiler.do_iconst(v2);
+        theCompiler.do_iconst(v1);
+        theCompiler.do_swap();
+
+        expectedValues[0] = v2;
+        expectedValues[1] = v1;
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 2; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == (0xffffffffL & expectedValues[i])
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+
+    public void work_do_dup2_x2_4() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        long v1 = -1L;
+        long v2 = 0x2fffffffffffffffL;
+
+        theCompiler.do_lconst(v2);
+        theCompiler.do_lconst(v1);
+        theCompiler.do_dup2_x2();
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v1;
+
+        theCompiler.peekLong(Aarch64.r0, 0);
+        theCompiler.peekLong(Aarch64.r1, 2);
+        theCompiler.peekLong(Aarch64.r2, 4);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+    // category 1/1/2
+    public void work_do_dup2_x2_3() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v1 = 234567890;
+        int v2 = 123456789;
+        long v3 = -1L;
+
+        theCompiler.do_lconst(v3);
+        theCompiler.do_iconst(v2);
+        theCompiler.do_iconst(v1);
+        theCompiler.do_dup2_x2();
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v3;
+        expectedValues[3] = v1;
+        expectedValues[4] = v2;
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+        theCompiler.peekLong(Aarch64.r2, 2);
+        theCompiler.peekInt(Aarch64.r3, 4);
+        theCompiler.peekInt(Aarch64.r4, 5);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+
+    // category 2/1/1
+    public void work_do_dup2_x2_2() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v3 = 234567890;
+        int v2 = 123456789;
+        long v1 = -1L;
+
+        theCompiler.do_iconst(v3);
+        theCompiler.do_iconst(v2);
+        theCompiler.do_lconst(v1);
+        theCompiler.do_dup2_x2();
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v3;
+        expectedValues[3] = v1;
+
+        theCompiler.peekLong(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 2);
+        theCompiler.peekInt(Aarch64.r2, 3);
+        theCompiler.peekLong(Aarch64.r3, 4);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+    // all category 1 types
+    public void work_do_dup2_x2() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v1 = 1234;
+        int v2 = 2345;
+        int v3 = 3456;
+        int v4 = 4567;
+
+        theCompiler.do_iconst(v4);
+        theCompiler.do_iconst(v3);
+        theCompiler.do_iconst(v2);
+        theCompiler.do_iconst(v1);
+        theCompiler.do_dup2_x2();
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v3;
+        expectedValues[3] = v4;
+        expectedValues[4] = v1;
+        expectedValues[5] = v2;
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+        theCompiler.peekInt(Aarch64.r2, 2);
+        theCompiler.peekInt(Aarch64.r3, 3);
+        theCompiler.peekInt(Aarch64.r4, 4);
+        theCompiler.peekInt(Aarch64.r5, 5);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 6; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+
+    // category 2 and 1 computational types
+    public void work_do_dup2_x1_2() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v2 = 123456789;
+        long v1 = -1L;
+
+        theCompiler.do_iconst(v2);
+        theCompiler.do_lconst(v1);
+        theCompiler.do_dup2_x1();
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v1;
+
+        theCompiler.peekLong(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 2);
+        theCompiler.peekLong(Aarch64.r2, 3);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+
+    }
+
+
+    // category 1 computational types.
+    public void work_do_dup2_x1() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v1 = 1234;
+        int v2 = 2345;
+        int v3 = 3456;
+
+        theCompiler.do_iconst(v3);
+        theCompiler.do_iconst(v2);
+        theCompiler.do_iconst(v1);
+        theCompiler.do_dup2_x1();
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v3;
+        expectedValues[3] = v1;
+        expectedValues[4] = v2;
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+        theCompiler.peekInt(Aarch64.r2, 2);
+        theCompiler.peekInt(Aarch64.r3, 3);
+        theCompiler.peekInt(Aarch64.r4, 4);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+
+
+    }
+
+    // category 2 & 1 computational type test.
+    public void work_do_dup_x2_2() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v1 = 123456789;
+        long v2 = -1L;
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v1;
+
+        theCompiler.do_lconst(v2);
+        theCompiler.do_iconst(v1);
+        theCompiler.do_dup_x2();
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekLong(Aarch64.r1, 1);
+        theCompiler.peekInt(Aarch64.r2, 3);
+
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == expectedValues[i]
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+
+    // category 1 test
+    public void work_do_dup_x2_1() throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int [] v = {-123456789, 123456789, 987654321};
+        CiRegister [] reg = {Aarch64.r0, Aarch64.r1, Aarch64.r2, Aarch64.r3};
+
+        theCompiler.do_iconst(v[0]);
+        theCompiler.do_iconst(v[1]);
+        theCompiler.do_iconst(v[2]);
+
+        expectedValues[0] = v[2];
+        expectedValues[1] = v[1];
+        expectedValues[2] = v[0];
+        expectedValues[3] = v[2];
+        theCompiler.do_dup_x2();
+
+        for (int i = 0; i < reg.length; i++) {
+            theCompiler.peekInt(reg[i], i);
+        }
+        long [] simValues = generateAndTest(expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println(i + " " + simValues[i]);
+            assert simValues[i] == (expectedValues[i] & 0xffffffffL)
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+    }
+
+    public void work_do_dup_x1 () throws Exception {
+        initialiseFrameForCompilation();
+        theCompiler.initFrame(anMethod, codeAttr);
+        initialiseExpectedValues();
+        Aarch64MacroAssembler masm = theCompiler.getMacroAssembler();
+        masm.codeBuffer.reset();
+
+        int v1 = -123456778;
+        int v2 = 123456789;
+
+        expectedValues[0] = v1;
+        expectedValues[1] = v2;
+        expectedValues[2] = v1;
+
+        theCompiler.do_iconst(v2);
+        theCompiler.do_iconst(v1);
+        theCompiler.do_dup_x1();
+
+        theCompiler.peekInt(Aarch64.r0, 0);
+        theCompiler.peekInt(Aarch64.r1, 1);
+        theCompiler.peekInt(Aarch64.r2, 2);
+
+        long [] simValues = generateAndTest (expectedValues, testValues, bitmasks);
+
+        for (int i = 0; i < 3; i++) {
+            assert simValues[i] == (0xffffffffL & expectedValues[i])
+                            : i + " expected " + expectedValues[i] + ", got " + simValues[i];
+        }
+
+    }
+
     // category 2 type test
-    public void test_do_dup2_2 () throws Exception {
+    public void work_do_dup2_2 () throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
         initialiseExpectedValues();
@@ -338,7 +684,7 @@ public class Aarch64T1XpTest extends MaxTestCase {
     }
 
     // category 1 type test
-    public void test_do_dup2_1 () throws Exception {
+    public void work_do_dup2_1 () throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
         initialiseExpectedValues();
@@ -389,7 +735,7 @@ public class Aarch64T1XpTest extends MaxTestCase {
         assert simValues[0] == expectedValues[0];
         assert simValues[1] == expectedValues[1];
     }
-    public void test_do_dconst() throws Exception {
+    public void work_do_dconst() throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
         initialiseExpectedValues();
@@ -416,7 +762,7 @@ public class Aarch64T1XpTest extends MaxTestCase {
         }
     }
 
-    public void test_do_lconst() throws Exception {
+    public void work_do_lconst() throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
         initialiseExpectedValues();
@@ -613,11 +959,7 @@ public class Aarch64T1XpTest extends MaxTestCase {
     }
 
 
-    public void test_storeInt () throws Exception {
-
-    }
-
-    public void test_LoadStoreInt() throws Exception {
+    public void work_LoadStoreInt() throws Exception {
         initialiseFrameForCompilation();
         theCompiler.initFrame(anMethod, codeAttr);
         initialiseExpectedValues();

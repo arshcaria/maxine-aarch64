@@ -499,12 +499,12 @@ public class AARCH64T1XCompilation extends T1XCompilation {
 
     @Override
     protected void do_dup_x1() {
-
+        super.do_dup_x1();
     }
 
     @Override
     protected void do_dup_x2() {
-
+        super.do_dup_x2();
     }
 
     @Override
@@ -514,17 +514,17 @@ public class AARCH64T1XCompilation extends T1XCompilation {
 
     @Override
     protected void do_dup2_x1() {
-
+        super.do_dup2_x1();
     }
 
     @Override
     protected void do_dup2_x2() {
-
+        super.do_dup2_x2();
     }
 
     @Override
     protected void do_swap() {
-
+        super.do_swap();
     }
 
     @Override
