@@ -35,6 +35,27 @@ Base/loaded-classes.jar
 .project
 .settings/org.eclipse.jdt.core.prefs
 .settings/org.eclipse.jdt.ui.prefs
+# msc
+com.oracle.max.vm.ext.c1xgraal/.factorypath
+com.oracle.max.vm.ext.vma/.factorypath
+com.oracle.max.vm.ext.graal/.factorypath
+com.oracle.max.vma.tools/.factorypath
+mx/eclipse-launches/attach-localhost-8000.launch
+workingsets.xml
+maxine-tester/junit-tests/bind_output
+maxine-tester/junit-tests/codebuffer.c
+maxine-tester/junit-tests/gdb_output
+maxine-tester/junit-tests/qemu_errors
+maxine-tester/junit-tests/startup.o
+maxine-tester/junit-tests/test.arm.asm.AutoTest.command
+maxine-tester/junit-tests/test.arm.asm.AutoTest.passed
+maxine-tester/junit-tests/test.arm.asm.AutoTest.stdout
+maxine-tester/junit-tests/test.bin
+maxine-tester/junit-tests/test.elf
+maxine-tester/junit-tests/test.o
+com.oracle.max.vm.tests/bind_output
+com.oracle.max.vm.tests/qemu_errors
+com.oracle.max.vm.tests/qemu_output
 
 # switch to regexp syntax
 syntax: regexp

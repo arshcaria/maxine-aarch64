@@ -31,7 +31,9 @@ public enum ISA {
     ARM(Category.RISC, 4, false, 0),
     IA32(Category.CISC, 0, false, 0),
     PPC(Category.RISC, 4, true, 0),
-    SPARC(Category.RISC, 4, true, 8);
+    SPARC(Category.RISC, 4, true, 8),
+    // jiaqi.liu.cs@gmail.com Add Aarch64 ISA
+    Aarch64(Category.RISC, 8, false, 0);
 
     public enum Category {
         CISC, RISC;

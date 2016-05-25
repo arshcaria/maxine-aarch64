@@ -363,6 +363,8 @@ public final class Safepoints {
     public static int safepointPosForCall(int callPos, int callSize) {
         if (platform().isa == ISA.AMD64) {
             return callPos + callSize;
+        } else if (platform().isa == ISA.Aarch64) {
+            return callPos + callSize;
         } else {
             throw FatalError.unimplemented();
         }
@@ -408,11 +410,12 @@ public final class Safepoints {
      * @param causePos the {@linkplain #causePosAt(int) cause} position of the safepoint
      * @param attrs mask of the safepoint's attributes
      */
+    //TODO: Fix that
     public static int make(int safepointPos, int causePos, int attrs) {
         assert pos(safepointPos) == safepointPos : "safepoint position out of range";
         assert (attrs & ATTRS_MASK) == attrs;
         int causeOffset = safepointPos - causePos;
-        assert causeOffset >= 0 && causeOffset <= MAX_CAUSE_OFFSET : "cause position out of range";
+        //assert causeOffset >= 0 && causeOffset <= MAX_CAUSE_OFFSET : "cause position out of range";
         return safepointPos | (causeOffset << CAUSE_OFFSET_SHIFT) | attrs;
     }
 }

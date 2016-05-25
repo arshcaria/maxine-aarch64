@@ -140,6 +140,10 @@ public class T1X extends RuntimeCompiler.DefaultNameAdapter implements RuntimeCo
         }
     };
 
+    public T1XCompilation getT1XCompilation() {
+        return compilation.get();
+    }
+
     @Override
     public RuntimeCompiler.Nature nature() {
         return RuntimeCompiler.Nature.BASELINE;
@@ -636,6 +640,11 @@ public class T1X extends RuntimeCompiler.DefaultNameAdapter implements RuntimeCo
     @FOLD
     public static boolean isAMD64() {
         return platform().isa == ISA.AMD64;
+    }
+
+    @FOLD
+    public static boolean isAARCH64() {
+        return platform().isa == ISA.Aarch64;
     }
 
     /**
